@@ -68,4 +68,21 @@ public class FluxAndMonoControllerTest {
                 });
     }
 
+    @Test
+    public void flux_infiniteStream(){
+        Flux<Long> longFlux = webTestClient.get().uri("/infinitestream")
+                .accept(MediaType.APPLICATION_STREAM_JSON)
+                .exchange()
+                .expectStatus().isOk()
+                .returnResult(Long.class)
+                .getResponseBody();
+
+        StepVerifier.create(longFlux)
+                .expectNext(0l)
+                .expectNext(1l)
+                .expectNext(2l)
+                .thenCancel()
+                .verify();
+    }
+
 }
