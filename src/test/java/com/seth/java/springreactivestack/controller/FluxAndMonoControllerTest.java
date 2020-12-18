@@ -8,6 +8,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.EntityExchangeResult;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import java.util.Arrays;
@@ -85,4 +86,16 @@ public class FluxAndMonoControllerTest {
                 .verify();
     }
 
+    @Test
+    public void mono_Stream(){
+        webTestClient.get().uri("/mono")
+                .accept(MediaType.APPLICATION_STREAM_JSON)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(Integer.class)
+                .consumeWith(response -> {
+                    Assertions.assertEquals(1, response.getResponseBody());
+                });
+
+    }
 }
