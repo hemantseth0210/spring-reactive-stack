@@ -51,5 +51,11 @@ public class ItemController {
                 .defaultIfEmpty(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
+    @GetMapping("/v1/items/exception")
+    public Flux<Item> exception(){
+
+        return itemRepository.findAll()
+                .concatWith(Mono.error(new RuntimeException("Exception Occurred")));
+    }
 
 }
